@@ -39,7 +39,7 @@ class CrudGenerator extends Command
         $this->generateController($format);
         $this->generateQuasar($format);
 
-        $controller = '\App\Http\Controllers\$controller\\'.$format['plural'].'Controller';
+        $controller = '\App\Http\Controllers\\'.$format['plural'].'Controller';
         $plural = $format['l-plural'];
         $route = "Route::resource('/$plural', {$controller}::class);";
         $this->components->info($route);
