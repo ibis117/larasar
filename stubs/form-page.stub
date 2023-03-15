@@ -1,0 +1,78 @@
+<template>
+    <div class="q-pa-md">
+
+        <q-form
+            class="row q-col-gutter-md"
+            @submit="onSubmit"
+        >
+            <text-field
+                v-model="{{ l-singular }}.name"
+                label="Name"
+                class="col-md-12"
+                lazy-rules
+                :rules="[rules.required]"
+            />
+
+            <div class="col-md-12 row justify-end">
+                <q-btn color="primary" label="Submit" type="submit" />
+            </div>
+        </q-form>
+
+    </div>
+</template>
+
+<script setup>
+import { useQuasar } from "quasar";
+import { storeToRefs } from "pinia";
+import {useValidation} from "../../composables/useValidation";
+import {use{{ singular }}Store} from "../../store/{{ l-singular }}-store";
+import TextField from "../../components/form-fields/TextField.vue";
+import {useFormData} from "../../composables/useFormData";
+
+const $q = useQuasar();
+
+const {rules} = useValidation();
+
+const {convertToFormData} = useFormData();
+
+const props = defineProps({
+    item:{
+        type: Object,
+        default: () =>{}
+    },
+
+    isNew: {
+        type: Boolean,
+        default: false
+    }
+})
+const emits = defineEmits([
+    'onSubmit'
+])
+
+const {{ l-singular }}Store = use{{ singular }}Store();
+const {{{ l-singular }}} = storeToRefs({{ l-singular }}Store);
+
+if (props.isNew) {
+    {{ l-singular }}Store.setDefault{{ singular }}()
+} else {
+    {{ l-singular }}Store.set{{ singular }}(props.item)
+}
+
+const onSubmit = () => {
+    const formData = convertToFormData({{ l-singular }}Store.{{ l-singular }});
+    if(props.isNew){
+        {{ l-singular }}Store.create(formData)
+            .then(res => {
+                emits('onSubmit')
+            })
+    } else {
+        {{ l-singular }}Store.update({{ l-singular }}Store.{{ l-singular }}.id, formData, true)
+            .then(res => {
+                emits('onSubmit')
+            })
+    }
+};
+
+
+</script>

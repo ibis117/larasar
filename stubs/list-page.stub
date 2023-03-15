@@ -1,0 +1,123 @@
+<template>
+    <main-layout>
+        <q-page padding>
+            <div class="table-wrapper padding">
+                <q-table
+                    v-model:pagination="{{ l-singular }}Store.pagination"
+                    :columns="columns"
+                    :loading="{{ l-singular }}Store.isLoading"
+                    :rows="{{ l-singular }}Store.{{ l-plural }}"
+                    bordered
+                    flat
+                    row-key="id"
+                    :title="title"
+                    @request="onRequest"
+                    v-model:selected="{{ l-singular }}Store.selected"
+                    selection="multiple"
+                >
+                    <template #top-right>
+                        <div class="row q-gutter-x-sm">
+
+                            <div v-if="{{ l-singular }}Store.selected.length > 0">
+                                <q-btn color="red" flat icon="delete" round size="16px" unelevated >
+                                    <q-tooltip class="bg-primary">
+                                        Delete All Selected
+                                    </q-tooltip>
+                                </q-btn>
+                            </div>
+
+                            <text-field
+                                v-model="{{ l-singular }}Store.filters.query"
+                                append-icon="search"
+                                borderless
+                                style="width: 250px;"
+                                debounce="300"
+                                dense
+                            />
+
+
+                            <q-btn color="primary" flat icon="refresh" round size="16px" unelevated
+                                   @click="list">
+                                <q-tooltip class="bg-primary">
+                                    Refresh
+                                </q-tooltip>
+                            </q-btn>
+
+                            <q-btn color="primary" flat icon="add"  round size="16px" unelevated
+                                   @click="onAdd">
+                                <q-tooltip class="bg-primary">
+                                    Add
+                                </q-tooltip>
+                            </q-btn>
+                        </div>
+                    </template>
+
+                    <template #body-cell-actions="props">
+                        <q-td key="actions" :props="props">
+                            <q-btn color="primary" flat icon="edit" round @click.stop="onEdit(props.row)">
+                                <q-tooltip class="bg-primary">Edit</q-tooltip>
+                            </q-btn>
+                            <q-btn color="red" flat icon="delete" round @click.stop="onDelete(props.row.id)">
+                                <q-tooltip class="bg-primary">Delete</q-tooltip>
+                            </q-btn>
+                        </q-td>
+                    </template>
+                </q-table>
+
+                <q-modal v-model="showModal">
+                    <template #title>
+                        {{ isNew ? "Add {{ singular }}" : "Update {{ singular }}" }}
+                    </template>
+                    <{{ l-singular }}-form :is-new="isNew" :item="item" @onSubmit="onSubmit"/>
+                </q-modal>
+            </div>
+        </q-page>
+    </main-layout>
+</template>
+
+<script setup>
+import {useQuasar} from "quasar";
+import {watch} from "vue";
+import {useCrud} from "../../composables/useCrud";
+import {use{{ singular }}Store} from "../../store/{{ l-singular }}-store";
+import MainLayout from "../../layouts/MainLayout.vue";
+import QModal from "../../components/QModal.vue";
+import {{ singular }}Form from "./{{ singular }}Form.vue";
+import TextField from "../../components/form-fields/TextField.vue";
+
+const $q = useQuasar();
+const columns = [
+    {name: "id", align: "left", label: "#", field: row => serverIndex(row), sortable: false},
+    {name: "name", align: "left", label: "Name", field: "name", sortable: true},
+    {name: "actions", align: "left", label: "Actions", field: "actions", sortable: false}
+];
+const title = '{{ plural }}';
+const {{ l-singular }}Store = use{{ singular }}Store();
+
+const afterListUpdate = () => {
+    setItems({{ l-singular }}Store.{{ l-plural }});
+};
+
+const {
+    showModal,
+    isNew,
+    item,
+    onRequest,
+    onAdd,
+    onEdit,
+    onDelete,
+    onSubmit,
+    serverIndex,
+    setItems,
+    list
+} = useCrud({{ l-singular }}Store, afterListUpdate);
+
+list();
+
+
+watch({{ l-singular }}Store.filters, (val) => {
+    list();
+});
+
+
+</script>

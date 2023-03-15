@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Base\BaseCrudController;
+use App\Http\Requests\{{ singular }}StoreRequest;
+use App\Http\Resources\{{ singular }}Resource;
+use App\Models\{{ singular }};
+
+class {{ plural }}Controller extends BaseCrudController
+{
+    protected string $model = {{ singular }}::class;
+    protected string $resource = {{ singular }}Resource::class;
+    protected string $storeRequest = {{ singular }}StoreRequest::class;
+}

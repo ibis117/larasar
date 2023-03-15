@@ -1,0 +1,41 @@
+{
+    "name": "ibis117/larasar",
+    "description": ":package_description",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Author Name",
+            "email": "author@email.com",
+            "homepage": "http://author.com"
+        }
+    ],
+    "homepage": "https://github.com/ibis117/larasar",
+    "keywords": ["Laravel", "Larasar"],
+    "require": {
+        "illuminate/support": "~10"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ibis117\\Larasar\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ibis117\\Larasar\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ibis117\\Larasar\\LarasarServiceProvider"
+            ],
+            "aliases": {
+                "Larasar": "Ibis117\\Larasar\\Facades\\Larasar"
+            }
+        }
+    }
+}
