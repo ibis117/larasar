@@ -41,10 +41,11 @@ class CrudGenerator extends Command
 
         $controller = '\App\Http\Controllers\\'.$format['plural'].'Controller';
         $plural = $format['l-plural'];
+        $singular = $format['l-singular'];
         $route = "Route::resource('/$plural', {$controller}::class);";
         $this->components->info($route);
         $componentName = $format['singular'].'Page';
-        $vueRoute = "{ path: '/$plural', component: () => import('../pages/$plural/$componentName.vue'), name: '{$componentName}' },";
+        $vueRoute = "{ path: '/$plural', component: () => import('../pages/$singular/$componentName.vue'), name: '{$componentName}' },";
         $this->components->info($vueRoute);
     }
 
