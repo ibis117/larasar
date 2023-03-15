@@ -39,11 +39,12 @@ class CrudGenerator extends Command
         $this->generateController($format);
         $this->generateQuasar($format);
 
-        $controller = $format['plural'].'Controller';
-        $route = "Route::resource('/posts', \App\Http\Controllers\{$controller}::class);";
+        $controller = '\App\Http\Controllers\$controller\\'.$format['plural'].'Controller';
+        $plural = $format['l-plural'];
+        $route = "Route::resource('/$plural', {$controller}::class);";
         $this->components->info($route);
         $componentName = $format['singular'].'Page';
-        $vueRoute = "{ path: '/posts', component: () => import('../pages/post/{$componentName}.vue'), name: '{$componentName}' },";
+        $vueRoute = "{ path: '/$plural', component: () => import('../pages/$plural/$componentName.vue'), name: '{$componentName}' },";
         $this->components->info($vueRoute);
     }
 
